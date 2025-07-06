@@ -20,6 +20,7 @@ static constexpr Byte
     INS_LDA_ZEROPAGE = 0xA5,
     INS_LDA_ZEROPAGE_X = 0xB5,
     INS_LDA_ABSOLUTE = 0xAD,
+    INS_LDA_ABSOLUTE_X = 0xBD,
     INS_JSR = 0x20;
 
 struct CPU

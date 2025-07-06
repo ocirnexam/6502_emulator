@@ -100,6 +100,15 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             LDASetStatus();
         }
         break;
+        case INS_LDA_ABSOLUTE_X:
+        {
+            Word Address = FetchWord(SysTicks, memory);
+            Address += X;
+            SysTicks--;
+            A = ReadByte(SysTicks, memory, Address);
+            LDASetStatus();
+        }
+        break;
         case INS_JSR:
         {
             Word JumpAddress = FetchWord(SysTicks, memory);
@@ -111,7 +120,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         }
         break;
         default:
-            std::cout << "Instruction is not handled: " << Instruction << "\n";
+            std::cout << "Instruction is not handled: " << std::hex << Instruction << "\n";
             return;
         }
     }
