@@ -224,7 +224,7 @@ void CPU::PrintRegisters()
     std::cout << "------------------------------------\n";
     std::cout << "PC: 0x" << std::hex << (int)PC << "\n";
     std::cout << "SP: 0x" << std::hex << (int)SP << "\n";
-    std::cout << "PS: 0x" << std::hex << (int)PS << "\n";
+    std::cout << "PS: 0b" << std::dec << std::bitset<8>(PS) << ", Register Bits: [N V 1 B D I Z C]\n";
     std::cout << "A : 0x" << std::hex << (int)A << "\n";
     std::cout << "X : 0x" << std::hex << (int)X << "\n";
     std::cout << "Y : 0x" << std::hex << (int)Y << "\n";

@@ -6,13 +6,15 @@
 #include "datatypes.hpp"
 #include "memory/memory.hpp"
 
-#define CARRY_FLAG        ((Byte) 1 << 7)
-#define ZERO_FLAG         ((Byte) 1 << 6)
-#define INTERRUPT_DISABLE ((Byte) 1 << 5)
-#define DECIMAL_MODE      ((Byte) 1 << 4)
-#define BREAK_COMMAND     ((Byte) 1 << 3)
-#define OVERFLOW_FLAG     ((Byte) 1 << 1)
-#define NEGATIVE_FLAG     ((Byte) 1 << 0)
+#include <bitset>
+
+#define CARRY_FLAG        ((Byte) 1 << 0)
+#define ZERO_FLAG         ((Byte) 1 << 1)
+#define INTERRUPT_DISABLE ((Byte) 1 << 2)
+#define DECIMAL_MODE      ((Byte) 1 << 3)
+#define BREAK_COMMAND     ((Byte) 1 << 4)
+#define OVERFLOW_FLAG     ((Byte) 1 << 6)
+#define NEGATIVE_FLAG     ((Byte) 1 << 7)
 
 // OPCODES
 static constexpr Byte 

@@ -22,6 +22,8 @@ int main()
     mem[0xAAAB] = 0x05;
     mem[0xAAAC] = INS_LDA_INDIRECT_Y;
     mem[0xAAAD] = 0x15;
+    mem[0xAAAE] = INS_LDY_IMMEDIATE;
+    mem[0xAAAF] = 0x00;
     cpu.Execute(mem);
     cpu.PrintRegisters();
     // inline program
