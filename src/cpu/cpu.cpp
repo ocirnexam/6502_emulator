@@ -4,7 +4,7 @@ void CPU::Reset(Memory &memory)
 {
     PC = 0xFFFC;
     SP = 0x0100;
-    PS &= 0xFF; // Clear Processor Status register
+    PS = 0x00; // Clear Processor Status register
     A = X = Y = 0;
     memory.Initialize();
 }
