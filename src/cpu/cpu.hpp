@@ -16,6 +16,7 @@
 
 // OPCODES
 static constexpr Byte 
+    // LDA
     INS_LDA_IMMEDIATE = 0xA9,
     INS_LDA_ZEROPAGE = 0xA5,
     INS_LDA_ZEROPAGE_X = 0xB5,
@@ -24,7 +25,18 @@ static constexpr Byte
     INS_LDA_ABSOLUTE_Y = 0xB9,
     INS_LDA_INDIRECT_X = 0xA1,
     INS_LDA_INDIRECT_Y = 0xB1,
+    // LDX
+    INS_LDX_IMMEDIATE = 0xA2,
+    // LDY
+    INS_LDY_IMMEDIATE = 0xA0,
+    // JSR
     INS_JSR = 0x20;
+
+enum LDRegisterType {
+    X,
+    Y,
+    A
+};
 
 struct CPU
 {
@@ -41,7 +53,7 @@ struct CPU
     Byte ReadByte(u32& SysTicks, Memory& memory, Word Address);
     void Execute(u32 SysTicks, Memory& memory);
 
-    void LDASetStatus();
+    void LDSetStatus(LDRegisterType reg);
 
     void PrintRegisters();
 };

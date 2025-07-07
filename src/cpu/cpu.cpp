@@ -41,10 +41,22 @@ Byte CPU::ReadByte(u32 &SysTicks, Memory &memory, Word Address)
     return Data;
 }
 
-void CPU::LDASetStatus()
+void CPU::LDSetStatus(LDRegisterType regType)
 {
-    // Zero Flag has to be set if A == 0
-    if (A == 0)
+    // Zero Flag has to be set if reg == 0
+    Byte reg;
+    switch(regType) {
+        case LDRegisterType::A:
+            reg = A;
+            break;
+        case LDRegisterType::X:
+            reg = X;
+            break;
+        case LDRegisterType::Y:
+            reg = Y;
+            break;
+    }
+    if (reg == 0)
     {
         PS |= ZERO_FLAG;
     }
@@ -52,8 +64,8 @@ void CPU::LDASetStatus()
     {
         PS &= ~ZERO_FLAG;
     }
-    // Negative Flag has to be set if Bit 7 of A is 1
-    if (A & 0x80) // 0b10000000
+    // Negative Flag has to be set if Bit 7 of reg is 1
+    if (reg & 0x80) // 0b10000000
     {
         PS |= NEGATIVE_FLAG;
     }
@@ -70,18 +82,18 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         Byte Instruction = FetchByte(SysTicks, memory);
         switch (Instruction)
         {
+        // begin - LDA
         case INS_LDA_IMMEDIATE:
         {
-            Byte Value = FetchByte(SysTicks, memory);
-            A = Value;
-            LDASetStatus();
+            A = FetchByte(SysTicks, memory);
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE:
         {
             Byte ZeroPageAddress = FetchByte(SysTicks, memory);
             A = ReadByte(SysTicks, memory, ZeroPageAddress);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE_X:
@@ -90,14 +102,14 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             ZeroPageAddress += X;
             SysTicks--; // Adding X is an instruction with one tick
             A = ReadByte(SysTicks, memory, ZeroPageAddress);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE:
         {
             Word Address = FetchWord(SysTicks, memory);
             A = ReadByte(SysTicks, memory, Address);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_X:
@@ -106,7 +118,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             Address += X;
             SysTicks--;
             A = ReadByte(SysTicks, memory, Address);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_Y:
@@ -115,7 +127,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             Address += Y;
             SysTicks--;
             A = ReadByte(SysTicks, memory, Address);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_X:
@@ -126,7 +138,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             Byte LSB = ReadByte(SysTicks, memory, Address);
             Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
             A = ReadByte(SysTicks, memory, (Word) (MSB << 8 | LSB));
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_Y:
@@ -138,9 +150,26 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             SysTicks--;
             std::cout << std::hex << TargetAddress << std::endl;
             A = ReadByte(SysTicks, memory, TargetAddress);
-            LDASetStatus();
+            LDSetStatus(LDRegisterType::A);
         }
         break;
+        // end - LDA
+        // begin - LDX
+        case INS_LDX_IMMEDIATE:
+        {
+            X = FetchByte(SysTicks, memory);
+            LDSetStatus(LDRegisterType::X);
+        }
+        break;
+        // end - LDX
+        // begin - LDY
+        case INS_LDY_IMMEDIATE:
+        {
+            Y = FetchByte(SysTicks, memory);
+            LDSetStatus(LDRegisterType::Y);
+        }
+        break;
+        // end - LDY
         case INS_JSR:
         {
             Word JumpAddress = FetchWord(SysTicks, memory);
