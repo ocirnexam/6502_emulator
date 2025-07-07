@@ -12,4 +12,4 @@ Implemented Functions:
 - LDX (immediate)
 - LDY (immediate)
 - JMP (direct & indirect)
-- JSR
+- JSR (no return instruction yet)
