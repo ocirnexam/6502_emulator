@@ -10,15 +10,15 @@ int main()
     CPU cpu;
     cpu.Reset(mem);
     // inline program
-    cpu.X = 1;
-    mem[0x1718] = 0x69;
-    mem[0xFFFC] = INS_JSR;
-    mem[0xFFFD] = 0x42;
-    mem[0xFFFE] = 0x42;
-    mem[0x4242] = INS_LDA_ABSOLUTE_X;
-    mem[0x4243] = 0x17;
-    mem[0x4244] = 0x17;
-    cpu.Execute(11, mem);
+    cpu.Y = 5;
+    // data
+    mem[0x15] = 0x64;
+    mem[0x16] = 0x96;
+    mem[0x9669] = 0x88;
+    // program
+    mem[0xFFFC] = INS_LDA_INDIRECT_Y;
+    mem[0xFFFD] = 0x15;
+    cpu.Execute(6, mem);
     cpu.PrintRegisters();
     // inline program
     return 0;

@@ -109,6 +109,38 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             LDASetStatus();
         }
         break;
+        case INS_LDA_ABSOLUTE_Y:
+        {
+            Word Address = FetchWord(SysTicks, memory);
+            Address += Y;
+            SysTicks--;
+            A = ReadByte(SysTicks, memory, Address);
+            LDASetStatus();
+        }
+        break;
+        case INS_LDA_INDIRECT_X:
+        {
+            Byte Address = FetchByte(SysTicks, memory);
+            Address += X;
+            SysTicks--;
+            Byte LSB = ReadByte(SysTicks, memory, Address);
+            Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
+            A = ReadByte(SysTicks, memory, (Word) (MSB << 8 | LSB));
+            LDASetStatus();
+        }
+        break;
+        case INS_LDA_INDIRECT_Y:
+        {
+            Byte Address = FetchByte(SysTicks, memory);
+            Byte LSB = ReadByte(SysTicks, memory, Address);
+            Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
+            Word TargetAddress = (MSB << 8 | LSB) + Y;
+            SysTicks--;
+            std::cout << std::hex << TargetAddress << std::endl;
+            A = ReadByte(SysTicks, memory, TargetAddress);
+            LDASetStatus();
+        }
+        break;
         case INS_JSR:
         {
             Word JumpAddress = FetchWord(SysTicks, memory);
