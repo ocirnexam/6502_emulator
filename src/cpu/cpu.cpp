@@ -9,52 +9,48 @@ void CPU::Reset(Memory &memory)
     memory.Initialize();
 }
 
-void CPU::DecreaseSysTicks(u32 &SysTicks, u32 amount)
+void CPU::IncreaseSysTicks(uint32_t amount)
 {
-    while (SysTicks > 0 && amount > 0)
-    {
-        SysTicks--;
-        amount--;
-    }
+    SysTicks += amount;
 }
 
-Byte CPU::FetchByte(u32 &SysTicks, Memory &memory)
+Byte CPU::FetchByte(Memory &memory)
 {
     Byte Data = memory[PC];
     PC++;
-    DecreaseSysTicks(SysTicks, 1);
+    IncreaseSysTicks(1);
     return Data;
 }
 
-Word CPU::FetchWord(u32 &SysTicks, Memory&memory)
+Word CPU::FetchWord(Memory&memory)
 {
     Byte DataLow = memory[PC++];
     Byte DataHigh = memory[PC++];
-    DecreaseSysTicks(SysTicks, 2);
+    IncreaseSysTicks(2);
     Word Data = DataHigh << 8 | DataLow;
     return Data;
 
 }
 
-Byte CPU::ReadByte(u32 &SysTicks, Memory &memory, Byte Address)
+Byte CPU::ReadByte(Memory &memory, Byte Address)
 {
     Byte Data = memory[Address];
-    DecreaseSysTicks(SysTicks, 1);
+    IncreaseSysTicks(1);
     return Data;
 }
 
-Byte CPU::ReadByte(u32 &SysTicks, Memory &memory, Word Address)
+Byte CPU::ReadByte(Memory &memory, Word Address)
 {
     Byte Data = memory[Address];
-    DecreaseSysTicks(SysTicks, 1);
+    IncreaseSysTicks(1);
     return Data;
 }
 
-Word CPU::ReadWord(u32 &SysTicks, Memory &memory, Word Address)
+Word CPU::ReadWord(Memory &memory, Word Address)
 {
     Word Data = memory[Address];
     Data = memory[Address + 1] << 8;
-    DecreaseSysTicks(SysTicks, 2);
+    IncreaseSysTicks(2);
     return Data;
 }
 
@@ -92,80 +88,80 @@ void CPU::LDSetStatus(LDRegisterType regType)
     }
 }
 
-void CPU::Execute(u32 SysTicks, Memory &memory)
+void CPU::Execute(Memory &memory)
 {
-    while (SysTicks > 0)
+    while (1)
     {
-        Byte Instruction = FetchByte(SysTicks, memory);
+        Byte Instruction = FetchByte(memory);
         switch (Instruction)
         {
         // begin - LDA
         case INS_LDA_IMMEDIATE:
         {
-            A = FetchByte(SysTicks, memory);
+            A = FetchByte(memory);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE:
         {
-            Byte ZeroPageAddress = FetchByte(SysTicks, memory);
-            A = ReadByte(SysTicks, memory, ZeroPageAddress);
+            Byte ZeroPageAddress = FetchByte(memory);
+            A = ReadByte(memory, ZeroPageAddress);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE_X:
         {
-            Byte ZeroPageAddress = FetchByte(SysTicks, memory);
+            Byte ZeroPageAddress = FetchByte(memory);
             ZeroPageAddress += X;
-            DecreaseSysTicks(SysTicks, 1); // Adding X is an instruction with one tick
-            A = ReadByte(SysTicks, memory, ZeroPageAddress);
+            IncreaseSysTicks(1); // Adding X is an instruction with one tick
+            A = ReadByte(memory, ZeroPageAddress);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE:
         {
-            Word Address = FetchWord(SysTicks, memory);
-            A = ReadByte(SysTicks, memory, Address);
+            Word Address = FetchWord(memory);
+            A = ReadByte(memory, Address);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_X:
         {
-            Word Address = FetchWord(SysTicks, memory);
+            Word Address = FetchWord(memory);
             Address += X;
-            DecreaseSysTicks(SysTicks, 1);
-            A = ReadByte(SysTicks, memory, Address);
+            IncreaseSysTicks(1);
+            A = ReadByte(memory, Address);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_Y:
         {
-            Word Address = FetchWord(SysTicks, memory);
+            Word Address = FetchWord(memory);
             Address += Y;
-            DecreaseSysTicks(SysTicks, 1);
-            A = ReadByte(SysTicks, memory, Address);
+            IncreaseSysTicks(1);
+            A = ReadByte(memory, Address);
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_X:
         {
-            Byte Address = FetchByte(SysTicks, memory);
+            Byte Address = FetchByte(memory);
             Address += X;
-            DecreaseSysTicks(SysTicks, 1);
-            Byte LSB = ReadByte(SysTicks, memory, Address);
-            Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
-            A = ReadByte(SysTicks, memory, (Word) (MSB << 8 | LSB));
+            IncreaseSysTicks(1);
+            Byte LSB = ReadByte(memory, Address);
+            Byte MSB = ReadByte(memory, (Byte) (Address + 1));
+            A = ReadByte(memory, (Word) (MSB << 8 | LSB));
             LDSetStatus(LDRegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_Y:
         {
-            Byte Address = FetchByte(SysTicks, memory);
-            Byte LSB = ReadByte(SysTicks, memory, Address);
-            Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
+            Byte Address = FetchByte(memory);
+            Byte LSB = ReadByte(memory, Address);
+            Byte MSB = ReadByte(memory, (Byte) (Address + 1));
             Word TargetAddress = (MSB << 8 | LSB) + Y;
-            DecreaseSysTicks(SysTicks, 1);
-            A = ReadByte(SysTicks, memory, TargetAddress);
+            IncreaseSysTicks(1);
+            A = ReadByte(memory, TargetAddress);
             LDSetStatus(LDRegisterType::A);
         }
         break;
@@ -173,7 +169,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         // begin - LDX
         case INS_LDX_IMMEDIATE:
         {
-            X = FetchByte(SysTicks, memory);
+            X = FetchByte(memory);
             LDSetStatus(LDRegisterType::X);
         }
         break;
@@ -181,7 +177,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         // begin - LDY
         case INS_LDY_IMMEDIATE:
         {
-            Y = FetchByte(SysTicks, memory);
+            Y = FetchByte(memory);
             LDSetStatus(LDRegisterType::Y);
         }
         break;
@@ -189,28 +185,33 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         // begin - JUMP
         case INS_JSR:
         {
-            Word Address = FetchWord(SysTicks, memory);
+            Word Address = FetchWord(memory);
             memory.WriteWord(SP, PC - 1);
             SP++;
-            DecreaseSysTicks(SysTicks, 3);
+            IncreaseSysTicks(3);
             PC = Address;
         }
         break;
         case INS_JMP_ABSOLUTE:
         {
-            PC = FetchWord(SysTicks, memory);
+            PC = FetchWord(memory);
         }
         break;
         case INS_JMP_INDIRECT:
         {
-            Word Address = FetchWord(SysTicks, memory);
-            PC = ReadWord(SysTicks, memory, Address);
+            Word Address = FetchWord(memory);
+            PC = ReadWord(memory, Address);
 
         }
         break;
         // end - JUMP
         default:
+        if (Instruction == 0) {
+            std::cout << "Program Ended!" << std::endl;
+        }
+        else {
             std::cout << "Instruction is not handled: " << std::hex << Instruction << "\n";
+        }
             return;
         }
     }
@@ -227,5 +228,7 @@ void CPU::PrintRegisters()
     std::cout << "A : 0x" << std::hex << (int)A << "\n";
     std::cout << "X : 0x" << std::hex << (int)X << "\n";
     std::cout << "Y : 0x" << std::hex << (int)Y << "\n";
+    std::cout << "------------------------------------\n";
+    std::cout << "SysTicks: " << std::dec << SysTicks << "\n";
     std::cout << "------------------------------------\n";
 }

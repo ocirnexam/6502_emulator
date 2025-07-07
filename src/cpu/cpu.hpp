@@ -49,15 +49,17 @@ struct CPU
     Byte A, X, Y;  // Accumulator, Index X, Index Y registers
     Byte PS; // Processor Status register
 
-    void Reset(Memory& memory);
-    Byte FetchByte(u32& SysTicks, Memory& memory);
-    Word FetchWord(u32& SysTicks, Memory& memory);
-    Byte ReadByte(u32& SysTicks, Memory& memory, Byte Address);
-    Byte ReadByte(u32& SysTicks, Memory& memory, Word Address);
-    Word ReadWord(u32& SysTicks, Memory& memory, Word Address);
+    uint32_t SysTicks = 0;
 
-    void DecreaseSysTicks(u32& SysTicks, u32 amount);
-    void Execute(u32 SysTicks, Memory& memory);
+    void Reset(Memory& memory);
+    Byte FetchByte(Memory& memory);
+    Word FetchWord(Memory& memory);
+    Byte ReadByte(Memory& memory, Byte Address);
+    Byte ReadByte(Memory& memory, Word Address);
+    Word ReadWord(Memory& memory, Word Address);
+
+    void IncreaseSysTicks(uint32_t amount);
+    void Execute(Memory& memory);
 
     void LDSetStatus(LDRegisterType reg);
 

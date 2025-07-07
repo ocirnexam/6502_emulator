@@ -22,7 +22,7 @@ int main()
     mem[0xAAAB] = 0x05;
     mem[0xAAAC] = INS_LDA_INDIRECT_Y;
     mem[0xAAAD] = 0x15;
-    cpu.Execute(6, mem);
+    cpu.Execute(mem);
     cpu.PrintRegisters();
     // inline program
     return 0;
