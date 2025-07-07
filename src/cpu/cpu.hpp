@@ -29,8 +29,11 @@ static constexpr Byte
     INS_LDX_IMMEDIATE = 0xA2,
     // LDY
     INS_LDY_IMMEDIATE = 0xA0,
-    // JSR
-    INS_JSR = 0x20;
+    // Jumps
+    INS_JSR = 0x20, // Jump to subroutine
+    INS_JMP_ABSOLUTE = 0x4C, // jump
+    INS_JMP_INDIRECT = 0x6C; // jump
+    
 
 enum LDRegisterType {
     X,
@@ -51,6 +54,9 @@ struct CPU
     Word FetchWord(u32& SysTicks, Memory& memory);
     Byte ReadByte(u32& SysTicks, Memory& memory, Byte Address);
     Byte ReadByte(u32& SysTicks, Memory& memory, Word Address);
+    Word ReadWord(u32& SysTicks, Memory& memory, Word Address);
+
+    void DecreaseSysTicks(u32& SysTicks, u32 amount);
     void Execute(u32 SysTicks, Memory& memory);
 
     void LDSetStatus(LDRegisterType reg);

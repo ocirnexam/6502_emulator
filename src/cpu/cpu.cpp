@@ -9,11 +9,20 @@ void CPU::Reset(Memory &memory)
     memory.Initialize();
 }
 
+void CPU::DecreaseSysTicks(u32 &SysTicks, u32 amount)
+{
+    while (SysTicks > 0 && amount > 0)
+    {
+        SysTicks--;
+        amount--;
+    }
+}
+
 Byte CPU::FetchByte(u32 &SysTicks, Memory &memory)
 {
     Byte Data = memory[PC];
     PC++;
-    SysTicks--;
+    DecreaseSysTicks(SysTicks, 1);
     return Data;
 }
 
@@ -21,7 +30,7 @@ Word CPU::FetchWord(u32 &SysTicks, Memory&memory)
 {
     Byte DataLow = memory[PC++];
     Byte DataHigh = memory[PC++];
-    SysTicks -= 2;
+    DecreaseSysTicks(SysTicks, 2);
     Word Data = DataHigh << 8 | DataLow;
     return Data;
 
@@ -30,14 +39,22 @@ Word CPU::FetchWord(u32 &SysTicks, Memory&memory)
 Byte CPU::ReadByte(u32 &SysTicks, Memory &memory, Byte Address)
 {
     Byte Data = memory[Address];
-    SysTicks--;
+    DecreaseSysTicks(SysTicks, 1);
     return Data;
 }
 
 Byte CPU::ReadByte(u32 &SysTicks, Memory &memory, Word Address)
 {
     Byte Data = memory[Address];
-    SysTicks--;
+    DecreaseSysTicks(SysTicks, 1);
+    return Data;
+}
+
+Word CPU::ReadWord(u32 &SysTicks, Memory &memory, Word Address)
+{
+    Word Data = memory[Address];
+    Data = memory[Address + 1] << 8;
+    DecreaseSysTicks(SysTicks, 2);
     return Data;
 }
 
@@ -100,7 +117,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         {
             Byte ZeroPageAddress = FetchByte(SysTicks, memory);
             ZeroPageAddress += X;
-            SysTicks--; // Adding X is an instruction with one tick
+            DecreaseSysTicks(SysTicks, 1); // Adding X is an instruction with one tick
             A = ReadByte(SysTicks, memory, ZeroPageAddress);
             LDSetStatus(LDRegisterType::A);
         }
@@ -116,7 +133,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         {
             Word Address = FetchWord(SysTicks, memory);
             Address += X;
-            SysTicks--;
+            DecreaseSysTicks(SysTicks, 1);
             A = ReadByte(SysTicks, memory, Address);
             LDSetStatus(LDRegisterType::A);
         }
@@ -125,7 +142,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         {
             Word Address = FetchWord(SysTicks, memory);
             Address += Y;
-            SysTicks--;
+            DecreaseSysTicks(SysTicks, 1);
             A = ReadByte(SysTicks, memory, Address);
             LDSetStatus(LDRegisterType::A);
         }
@@ -134,7 +151,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         {
             Byte Address = FetchByte(SysTicks, memory);
             Address += X;
-            SysTicks--;
+            DecreaseSysTicks(SysTicks, 1);
             Byte LSB = ReadByte(SysTicks, memory, Address);
             Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
             A = ReadByte(SysTicks, memory, (Word) (MSB << 8 | LSB));
@@ -147,8 +164,7 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
             Byte LSB = ReadByte(SysTicks, memory, Address);
             Byte MSB = ReadByte(SysTicks, memory, (Byte) (Address + 1));
             Word TargetAddress = (MSB << 8 | LSB) + Y;
-            SysTicks--;
-            std::cout << std::hex << TargetAddress << std::endl;
+            DecreaseSysTicks(SysTicks, 1);
             A = ReadByte(SysTicks, memory, TargetAddress);
             LDSetStatus(LDRegisterType::A);
         }
@@ -170,16 +186,29 @@ void CPU::Execute(u32 SysTicks, Memory &memory)
         }
         break;
         // end - LDY
+        // begin - JUMP
         case INS_JSR:
         {
-            Word JumpAddress = FetchWord(SysTicks, memory);
+            Word Address = FetchWord(SysTicks, memory);
             memory.WriteWord(SP, PC - 1);
             SP++;
-            SysTicks -= 2;
-            PC = JumpAddress;
-            SysTicks--;
+            DecreaseSysTicks(SysTicks, 3);
+            PC = Address;
         }
         break;
+        case INS_JMP_ABSOLUTE:
+        {
+            PC = FetchWord(SysTicks, memory);
+        }
+        break;
+        case INS_JMP_INDIRECT:
+        {
+            Word Address = FetchWord(SysTicks, memory);
+            PC = ReadWord(SysTicks, memory, Address);
+
+        }
+        break;
+        // end - JUMP
         default:
             std::cout << "Instruction is not handled: " << std::hex << Instruction << "\n";
             return;
