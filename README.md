@@ -9,8 +9,8 @@ This is quite inconvenient, so in the future, another method to load the assembl
 
 Implemented Functions:
 - LDA (all addressing types)
-- LDX (immediate)
-- LDY (immediate)
+- LDX (immediate, zeropage)
+- LDY (immediate, zeropage)
 - JMP (direct & indirect)
 - JSR (no return instruction yet)
 
