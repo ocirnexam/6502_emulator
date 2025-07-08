@@ -13,3 +13,11 @@ Implemented Functions:
 - LDY (immediate)
 - JMP (direct & indirect)
 - JSR (no return instruction yet)
+
+## Usage
+
+When the emulation runs, an command promt is shown below the current register status.
+You can choose between:
+- s (step) to step one instruction
+- r (run) to finish the program
+- q (quit) to exit the program
