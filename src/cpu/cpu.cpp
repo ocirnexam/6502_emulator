@@ -173,11 +173,25 @@ void CPU::Execute(Memory &memory)
             LDSetStatus(LDRegisterType::X);
         }
         break;
+        case INS_LDX_ZEROPAGE:
+        {
+            Byte ZeroPageAddress = FetchByte(memory);
+            X = ReadByte(memory, ZeroPageAddress);
+            LDSetStatus(LDRegisterType::X);
+        }
+        break;
         // end - LDX
         // begin - LDY
         case INS_LDY_IMMEDIATE:
         {
             Y = FetchByte(memory);
+            LDSetStatus(LDRegisterType::Y);
+        }
+        break;
+        case INS_LDY_ZEROPAGE:
+        {
+            Byte ZeroPageAddress = FetchByte(memory);
+            Y = ReadByte(memory, ZeroPageAddress);
             LDSetStatus(LDRegisterType::Y);
         }
         break;

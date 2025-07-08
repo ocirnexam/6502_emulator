@@ -29,8 +29,10 @@ static constexpr Byte
     INS_LDA_INDIRECT_Y = 0xB1,
     // LDX
     INS_LDX_IMMEDIATE = 0xA2,
+    INS_LDX_ZEROPAGE = 0xA6,
     // LDY
     INS_LDY_IMMEDIATE = 0xA0,
+    INS_LDY_ZEROPAGE = 0xA4,
     // Jumps
     INS_JSR = 0x20, // Jump to subroutine
     INS_JMP_ABSOLUTE = 0x4C, // jump
