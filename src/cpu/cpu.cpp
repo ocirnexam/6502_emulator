@@ -90,9 +90,32 @@ void CPU::LDSetStatus(LDRegisterType regType)
 
 void CPU::Execute(Memory &memory)
 {
+    char command = 0;
+    Byte Instruction = 0;
     while (1)
     {
-        Byte Instruction = FetchByte(memory);
+        system("clear");
+        if (command == 's')
+        {
+            std::cout << "Step instruction: 0x" << std::hex << (int) Instruction << "\n";
+        }
+        else if (command == 'q')
+        {
+            break;
+        }
+        else if (command == 'r')
+        {
+            std::cout << "Run\n";
+        }
+        if (command != 'r')
+        {
+            PrintRegisters();
+            std::cout << ">> ";
+            std::cin >> command;
+        }
+
+        Instruction = FetchByte(memory);
+
         switch (Instruction)
         {
         // begin - LDA
@@ -221,6 +244,8 @@ void CPU::Execute(Memory &memory)
         // end - JUMP
         default:
         if (Instruction == 0) {
+            system("clear");
+            PrintRegisters();
             std::cout << "Program Ended!" << std::endl;
         }
         else {

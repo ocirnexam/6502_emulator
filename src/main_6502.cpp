@@ -27,6 +27,5 @@ int main()
     mem[0xAAAF] = 0x00;
     // inline program
     cpu.Execute(mem);
-    cpu.PrintRegisters();
     return 0;
 }
