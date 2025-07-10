@@ -54,18 +54,18 @@ Word CPU::ReadWord(Memory &memory, Word Address)
     return Data;
 }
 
-void CPU::LDSetStatus(LDRegisterType regType)
+void CPU::SetStatus(RegisterType regType)
 {
     // Zero Flag has to be set if reg == 0
     Byte reg;
     switch(regType) {
-        case LDRegisterType::A:
+        case RegisterType::A:
             reg = A;
             break;
-        case LDRegisterType::X:
+        case RegisterType::X:
             reg = X;
             break;
-        case LDRegisterType::Y:
+        case RegisterType::Y:
             reg = Y;
             break;
     }
@@ -122,14 +122,14 @@ void CPU::Execute(Memory &memory)
         case INS_LDA_IMMEDIATE:
         {
             A = FetchByte(memory);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE:
         {
             Byte ZeroPageAddress = FetchByte(memory);
             A = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_ZEROPAGE_X:
@@ -138,14 +138,14 @@ void CPU::Execute(Memory &memory)
             ZeroPageAddress += X;
             IncreaseSysTicks(1); // Adding X is an instruction with one tick
             A = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE:
         {
             Word Address = FetchWord(memory);
             A = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_X:
@@ -154,7 +154,7 @@ void CPU::Execute(Memory &memory)
             Address += X;
             IncreaseSysTicks(1);
             A = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_ABSOLUTE_Y:
@@ -163,7 +163,7 @@ void CPU::Execute(Memory &memory)
             Address += Y;
             IncreaseSysTicks(1);
             A = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_X:
@@ -174,7 +174,7 @@ void CPU::Execute(Memory &memory)
             Byte LSB = ReadByte(memory, Address);
             Byte MSB = ReadByte(memory, (Byte) (Address + 1));
             A = ReadByte(memory, (Word) (MSB << 8 | LSB));
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         case INS_LDA_INDIRECT_Y:
@@ -185,7 +185,7 @@ void CPU::Execute(Memory &memory)
             Word TargetAddress = (MSB << 8 | LSB) + Y;
             IncreaseSysTicks(1);
             A = ReadByte(memory, TargetAddress);
-            LDSetStatus(LDRegisterType::A);
+            SetStatus(RegisterType::A);
         }
         break;
         // end - LDA
@@ -193,14 +193,14 @@ void CPU::Execute(Memory &memory)
         case INS_LDX_IMMEDIATE:
         {
             X = FetchByte(memory);
-            LDSetStatus(LDRegisterType::X);
+            SetStatus(RegisterType::X);
         }
         break;
         case INS_LDX_ZEROPAGE:
         {
             Byte ZeroPageAddress = FetchByte(memory);
             X = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::X);
+            SetStatus(RegisterType::X);
         }
         break;
         case INS_LDX_ZEROPAGE_Y:
@@ -209,14 +209,14 @@ void CPU::Execute(Memory &memory)
             ZeroPageAddress += Y;
             IncreaseSysTicks(1);
             X = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::X);
+            SetStatus(RegisterType::X);
         }
         break;
         case INS_LDX_ABSOLUTE:
         {
             Word Address = FetchWord(memory);
             X = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::X);
+            SetStatus(RegisterType::X);
         }
         break;
         case INS_LDX_ABSOLUTE_Y:
@@ -225,7 +225,7 @@ void CPU::Execute(Memory &memory)
             Address += Y;
             IncreaseSysTicks(1);
             X = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::X);
+            SetStatus(RegisterType::X);
         }
         break;
         // end - LDX
@@ -233,14 +233,14 @@ void CPU::Execute(Memory &memory)
         case INS_LDY_IMMEDIATE:
         {
             Y = FetchByte(memory);
-            LDSetStatus(LDRegisterType::Y);
+            SetStatus(RegisterType::Y);
         }
         break;
         case INS_LDY_ZEROPAGE:
         {
             Byte ZeroPageAddress = FetchByte(memory);
             Y = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::Y);
+            SetStatus(RegisterType::Y);
         }
         break;
         case INS_LDY_ZEROPAGE_X:
@@ -249,14 +249,14 @@ void CPU::Execute(Memory &memory)
             ZeroPageAddress += X;
             IncreaseSysTicks(1);
             Y = ReadByte(memory, ZeroPageAddress);
-            LDSetStatus(LDRegisterType::Y);
+            SetStatus(RegisterType::Y);
         }
         break;
         case INS_LDY_ABSOLUTE:
         {
             Word Address = FetchWord(memory);
             Y = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::Y);
+            SetStatus(RegisterType::Y);
         }
         break;
         case INS_LDY_ABSOLUTE_X:
@@ -265,10 +265,21 @@ void CPU::Execute(Memory &memory)
             Address += X;
             IncreaseSysTicks(1);
             Y = ReadByte(memory, Address);
-            LDSetStatus(LDRegisterType::Y);
+            SetStatus(RegisterType::Y);
         }
         break;
         // end - LDY
+        // begin - LSR
+        case INS_LSR_A:
+        {
+            PS = 0;
+            PS |= (A & 1);
+            A >>= 1;
+            IncreaseSysTicks(1);
+            SetStatus(RegisterType::A);
+        }
+        break;
+        // end - LSR
         // begin - JUMP
         case INS_JSR:
         {

@@ -14,7 +14,7 @@ int main()
     mem[0x05] = 0x06;
     mem[0x15] = 0x63;
     mem[0x16] = 0x96;
-    mem[0x9669] = 0x88;
+    mem[0x9669] = 0x89;
     mem[0x1010] = 0x01;
     mem[0x1011] = 0x99;
     // program
@@ -31,6 +31,7 @@ int main()
     mem[0xAAB1] = INS_LDY_ABSOLUTE_X;
     mem[0xAAB2] = 0x10;
     mem[0xAAB3] = 0x10;
+    mem[0xAAB4] = INS_LSR_A;
     // inline program
     cpu.Execute(mem);
     return 0;

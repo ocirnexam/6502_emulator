@@ -11,6 +11,7 @@ Implemented Functions:
 - LDA (all addressing types)
 - LDX (all addressing types)
 - LDY (all addressing types)
+- LSR (Accumulator)
 - JMP (direct & indirect)
 - JSR (no return instruction yet)
 

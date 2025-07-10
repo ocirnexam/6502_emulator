@@ -39,13 +39,15 @@ static constexpr Byte
     INS_LDY_ZEROPAGE_X = 0xB4,
     INS_LDY_ABSOLUTE = 0xAC,
     INS_LDY_ABSOLUTE_X = 0xBC,
+    // LSR
+    INS_LSR_A = 0x4A,
     // Jumps
     INS_JSR = 0x20, // Jump to subroutine
     INS_JMP_ABSOLUTE = 0x4C, // jump
     INS_JMP_INDIRECT = 0x6C; // jump
     
 
-enum LDRegisterType {
+enum RegisterType {
     X,
     Y,
     A
@@ -71,7 +73,7 @@ struct CPU
     void IncreaseSysTicks(uint32_t amount);
     void Execute(Memory& memory);
 
-    void LDSetStatus(LDRegisterType reg);
+    void SetStatus(RegisterType reg);
 
     void PrintRegisters();
 };
