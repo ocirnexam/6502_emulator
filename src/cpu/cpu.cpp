@@ -203,6 +203,31 @@ void CPU::Execute(Memory &memory)
             LDSetStatus(LDRegisterType::X);
         }
         break;
+        case INS_LDX_ZEROPAGE_Y:
+        {
+            Byte ZeroPageAddress = FetchByte(memory);
+            ZeroPageAddress += Y;
+            IncreaseSysTicks(1);
+            X = ReadByte(memory, ZeroPageAddress);
+            LDSetStatus(LDRegisterType::X);
+        }
+        break;
+        case INS_LDX_ABSOLUTE:
+        {
+            Word Address = FetchWord(memory);
+            X = ReadByte(memory, Address);
+            LDSetStatus(LDRegisterType::X);
+        }
+        break;
+        case INS_LDX_ABSOLUTE_Y:
+        {
+            Word Address = FetchWord(memory);
+            Address += Y;
+            IncreaseSysTicks(1);
+            X = ReadByte(memory, Address);
+            LDSetStatus(LDRegisterType::X);
+        }
+        break;
         // end - LDX
         // begin - LDY
         case INS_LDY_IMMEDIATE:
@@ -215,6 +240,31 @@ void CPU::Execute(Memory &memory)
         {
             Byte ZeroPageAddress = FetchByte(memory);
             Y = ReadByte(memory, ZeroPageAddress);
+            LDSetStatus(LDRegisterType::Y);
+        }
+        break;
+        case INS_LDY_ZEROPAGE_X:
+        {
+            Byte ZeroPageAddress = FetchByte(memory);
+            ZeroPageAddress += X;
+            IncreaseSysTicks(1);
+            Y = ReadByte(memory, ZeroPageAddress);
+            LDSetStatus(LDRegisterType::Y);
+        }
+        break;
+        case INS_LDY_ABSOLUTE:
+        {
+            Word Address = FetchWord(memory);
+            Y = ReadByte(memory, Address);
+            LDSetStatus(LDRegisterType::Y);
+        }
+        break;
+        case INS_LDY_ABSOLUTE_X:
+        {
+            Word Address = FetchWord(memory);
+            Address += X;
+            IncreaseSysTicks(1);
+            Y = ReadByte(memory, Address);
             LDSetStatus(LDRegisterType::Y);
         }
         break;
