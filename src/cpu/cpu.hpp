@@ -41,6 +41,10 @@ static constexpr Byte
     INS_LDY_ABSOLUTE_X = 0xBC,
     // LSR
     INS_LSR_A = 0x4A,
+    INS_LSR_ZEROPAGE = 0x46,
+    INS_LSR_ZEROPAGE_X = 0x56,
+    INS_LSR_ABSOLUTE = 0x4E,
+    INS_LSR_ABSOLUTE_X = 0x5E,
     // Jumps
     INS_JSR = 0x20, // Jump to subroutine
     INS_JMP_ABSOLUTE = 0x4C, // jump
@@ -55,6 +59,7 @@ enum RegisterType {
 
 struct CPU
 {
+    Memory memory;
     Word PC;
     Word SP;
 
@@ -63,19 +68,26 @@ struct CPU
 
     uint32_t SysTicks = 0;
 
-    void Reset(Memory& memory);
-    Byte FetchByte(Memory& memory);
-    Word FetchWord(Memory& memory);
-    Byte ReadByte(Memory& memory, Byte Address);
-    Byte ReadByte(Memory& memory, Word Address);
-    Word ReadWord(Memory& memory, Word Address);
+    void Reset();
+    Byte FetchByte();
+    Word FetchWord();
+    Byte ReadByte(Byte Address);
+    Byte ReadByte(Word Address);
+    Word ReadWord(Word Address);
 
     void IncreaseSysTicks(uint32_t amount);
-    void Execute(Memory& memory);
+    void Execute();
 
     void SetStatus(RegisterType reg);
 
     void PrintRegisters();
+
+    // private functions for cpu instructions
+private:
+    void InstructionLDA(Byte Instruction);
+    void InstructionLDX(Byte Instruction);
+    void InstructionLDY(Byte Instruction);
+    void InstructionLSR(Byte Instruction);
 };
 
 #endif

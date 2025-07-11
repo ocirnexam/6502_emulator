@@ -6,9 +6,9 @@
 
 int main()
 {
-    Memory mem;
     CPU cpu;
-    cpu.Reset(mem);
+    Memory& mem = cpu.memory;
+    cpu.Reset();
     // inline program
     // data
     mem[0x05] = 0x06;
@@ -33,6 +33,6 @@ int main()
     mem[0xAAB3] = 0x10;
     mem[0xAAB4] = INS_LSR_A;
     // inline program
-    cpu.Execute(mem);
+    cpu.Execute();
     return 0;
 }
