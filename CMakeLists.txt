@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+SET(CXX_STANDARD 23)
+
 project(emulator_6502)
 
 include_directories(src)

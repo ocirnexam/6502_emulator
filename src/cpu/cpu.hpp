@@ -2,11 +2,12 @@
 #define CPU_H_INCLUDED
 
 #include <iostream>
+#include <cstdint>
+#include <bitset>
 
 #include "datatypes.hpp"
 #include "memory/memory.hpp"
 
-#include <bitset>
 
 #define CARRY_FLAG        ((Byte) 1 << 0)
 #define ZERO_FLAG         ((Byte) 1 << 1)
