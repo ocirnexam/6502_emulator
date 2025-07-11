@@ -335,7 +335,7 @@ void CPU::Execute()
     Byte Instruction = 0;
     while (1)
     {
-        system("clear");
+        (void) system("clear");
         if (command == 's')
         {
             std::cout << "Step instruction: 0x" << std::hex << (int)Instruction << "\n";
@@ -431,7 +431,7 @@ void CPU::Execute()
         default:
             if (Instruction == 0)
             {
-                system("clear");
+                (void) system("clear");
                 PrintRegisters();
                 std::cout << "Program Ended!" << std::endl;
             }
