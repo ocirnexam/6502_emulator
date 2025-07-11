@@ -13,9 +13,9 @@ Key Features
 
     🛠 Written in C++
 
-    🧪 Unit testing with the Unity Test Framework (planned) for reliability and regression detection
+    🧪 Unit testing with the Unity Test Framework (planned)
 
-    🔧 Designed for extensibility, debugging, and having fun deep-diving into CPU execution
+    🔧 Designed for debugging and having fun deep-diving into CPU execution
 
 6502 Architecture Highlights
 
