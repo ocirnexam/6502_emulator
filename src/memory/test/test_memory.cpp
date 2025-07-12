@@ -35,11 +35,11 @@ void test_memory_set_word(void)
 {
     Memory mem;
     mem.Initialize();
-    mem.WriteWord(0x100, 0x1111);
-    TEST_ASSERT_EQUAL(0x1111, mem[0x100]);
+    mem.WriteWord(0x100, 0x1122);
+    TEST_ASSERT_EQUAL(0x1122, mem[0x100] | (mem[0x101] << 8));
 
-    mem.WriteWord(0x101, 0x11);
-    TEST_ASSERT_NOT_EQUAL(0x11, mem[0x101]);
+    mem.WriteWord(0x101, 0x10);
+    TEST_ASSERT_EQUAL(0x10, mem[0x101] | (mem[0x102] << 8));
 }
 
 int main(void)

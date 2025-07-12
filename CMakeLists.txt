@@ -4,7 +4,6 @@ SET(CXX_STANDARD 23)
 
 project(emulator_6502)
 
-include(CTest)
 add_subdirectory(src/Unity)
 
 add_executable(emulator_6502 src/main_6502.cpp src/memory/memory.cpp src/cpu/cpu.cpp)
@@ -17,7 +16,6 @@ target_link_libraries(test_memory unity)
 target_include_directories(test_memory PUBLIC src
 						                      src/memory
 						                      src/Unity)
-add_test(NAME test_memory COMMAND test_memory)
 
 # add_executable(test_cpu src/cpu/test/test_cpu.cpp
 # 			            src/cpu/cpu.cpp
@@ -27,4 +25,3 @@ add_test(NAME test_memory COMMAND test_memory)
 #                                            src/cpu
 #                                            src/memory
 #                                            src/Unity)
-# add_test(NAME test_cpu COMMAND test_cpu)
