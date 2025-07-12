@@ -1,5 +1,7 @@
 # Emulator for the 6502 Microprocessor
 
+![Workflow Badge](https://github.com/ocirnexam/6502_emulator/actions/workflows/.tests.yml/badge.svg)
+
 ## Description
 
 This project is a complete emulator for the classic MOS Technology 6502 8-bit microprocessor, implemented in modern C++. The emulator supports the full official 6502 instruction set, including all addressing modes and status flag behaviors, and accurately replicates the original CPU's timing and logic.
