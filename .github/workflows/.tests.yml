@@ -22,6 +22,10 @@ jobs:
     - name: Build
       uses: threeal/cmake-action@v2.1.0
 
-    - name: Test
+    - name: Test Memory
       working-directory: ${{github.workspace}}/build
       run: ./test_memory
+
+    - name: Test CPU
+      working-directory: ${{github.workspace}}/build
+      run: ./test_cpu
