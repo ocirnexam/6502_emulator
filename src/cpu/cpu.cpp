@@ -2,6 +2,7 @@
 
 void CPU::Reset()
 {
+    SysTicks = 0;
     PC = 0xFFFC;
     SP = 0x0100;
     PS = 0x00; // Clear Processor Status register
@@ -335,6 +336,7 @@ void CPU::Execute()
     Byte Instruction = 0;
     while (1)
     {
+#ifdef VISUAL_DEBUG
         (void) system("clear");
         if (command == 's')
         {
@@ -354,6 +356,7 @@ void CPU::Execute()
             std::cout << ">> ";
             std::cin >> command;
         }
+#endif
 
         Instruction = FetchByte();
 
@@ -431,6 +434,8 @@ void CPU::Execute()
         default:
             if (Instruction == 0)
             {
+                SysTicks--;
+#ifdef VISUAL_DEBUG
                 (void) system("clear");
                 PrintRegisters();
                 std::cout << "Program Ended!" << std::endl;
@@ -438,6 +443,7 @@ void CPU::Execute()
             else
             {
                 std::cout << "Instruction is not handled: " << std::hex << Instruction << "\n";
+#endif
             }
             return;
         }

@@ -14,7 +14,7 @@ void test_memory_init(void)
 {
     Memory mem;
     mem.Initialize();
-    for(int i = 0; i < mem.MAX_MEM; i++)
+    for(int i = 0; i < MAX_MEM; i++)
     {
         TEST_ASSERT_EQUAL(0, mem[i]);
     }

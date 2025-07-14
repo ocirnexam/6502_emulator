@@ -7,9 +7,10 @@
 
 #include "datatypes.hpp"
 
+#define MAX_MEM 65536
+
 struct Memory
 {
-    static constexpr uint32_t MAX_MEM = 1024 * 64;
     Byte Data[MAX_MEM];
     void Initialize();
     void WriteWord(uint32_t Address, Word Date);
